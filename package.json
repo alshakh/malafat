@@ -9,7 +9,10 @@
     "mime-type": "^3.0.7",
     "mmmagic": "^0.5.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^5.15.2",
+    "jspm": "^0.16.54"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,5 +25,17 @@
   "bugs": {
     "url": "https://github.com/alshakh/malafat/issues"
   },
-  "homepage": "https://github.com/alshakh/malafat#readme"
+  "homepage": "https://github.com/alshakh/malafat#readme",
+  "jspm": {
+    "directories": {
+      "baseURL": "client",
+      "packages": "client/packages"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
 }
