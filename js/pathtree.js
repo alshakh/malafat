@@ -48,6 +48,8 @@ let processDirectory =  async function(path, relativeto) {
 }
 
 let processPath = async function(path, relativeto) {
+    relativeto = relativeto || path
+
     let pthStat = await Util.promisify(Fs.stat)(path); // throws an error when 'path' does not exist
 
     if (pthStat.isFile()) {
@@ -58,10 +60,6 @@ let processPath = async function(path, relativeto) {
     }
 }
 
-let processPathWithCallbacks = function( path, relativeto, callback) {
-     processPath.then((result) =>  callback(null, result),  error => callback(error));
-}
 //
-exports.pathTreeCallback = processPathWithCallbacks
 exports.pathTree = processPath
 
