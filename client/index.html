@@ -1,16 +1,22 @@
 <html>
+<html>
+	<head>
+        <script src="/packages/system.js"></script>
+        <script src="/config.js"></script>
+        <!--<script>
+            System.import("reveal/css/reveal.css!")
+            System.import("reveal/css/theme/white.css!")
+        </script>
+        <script>
+            System.import("xterm/dist/xterm.css!")
+            System.import("xterm/dist/addons/fullscreen/fullscreen.css!")
+        </script>-->
+    </head>
     <body>
-    <script>
-        var ws = new WebSocket('ws://localhost:3000/malafat');
-        ws.onopen = function () {
-            console.log('websocket is connected ...')
-            // sending a send event to websocket server
-            ws.send('connected')
-        }
-    // event emmited when receiving message 
-    ws.onmessage = function (ev) {
-        console.log(ev);
-    }
-    </script>
+        <div data-malafat data-dir="/var/tmp"></div>
+        <script>
+            System.import("/main.js")
+        </script>
+
     </body>
 </html>
