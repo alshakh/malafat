@@ -1,12 +1,4 @@
 
-const icons = require("file-icons")
-var  filename = 'REA.pdf';
-var class_name = icons.getClassWithColor(filename);
-document.body.innerHTML = "<a><span class=\"" + class_name + "\"></span>"+filename+"</a><br>" + document.body.innerHTML
-var  filename = 'REA.html';
-var class_name = icons.getClassWithColor(filename);
-document.body.innerHTML = "<a><span class=\"" + class_name + "\"></span>"+filename+"</a><br>" + document.body.innerHTML
-
 
 
 const FileTreeUI = require('./filetreeui')

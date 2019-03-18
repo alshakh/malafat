@@ -1,4 +1,6 @@
 const UiJsTree = require("ui-tree")
+//const fileicons = require("file-icons")
+
 
 module.exports = class   {
     constructor(element,onFileSelectFn) {
@@ -6,9 +8,21 @@ module.exports = class   {
 
         let options = {
             initialLevel: 3,
-            /*onSelect: function(nodeData, el) {
+            onSelect: (nodeData, el) => {
                 console.log(nodeData);
-            }*/
+            },
+            nodeRenderFn: (data, el) => {
+                console.log(data)
+                let filename = data.title
+                let span = document.createElement('span')
+                span.setAttribute('class', 'file-list-item')
+
+//                let icon = document.createElement('span')
+//                icon.setAttribute('class', fileicons.getClassWithColor(filename))
+//                span.appendChild(icon)
+                span.appendChild(document.createTextNode(filename))
+                return span
+            },
         };
 
         this.treeui = new UiJsTree({}, element, options);
@@ -16,38 +30,26 @@ module.exports = class   {
 
 
     _transformFileTreeData(ftdata) {
-        let tt = {}
         console.log(ftdata)
 
         switch (ftdata.kind) {
             case "file":
-                tt.title = ftdata.name
+                ftdata.title = ftdata.name
                 break;
             case "dir":
-                tt.title = ftdata.name
-                tt.children = []
-                ftdata.children.foreach
+                ftdata.title = ftdata.name
                 for (let i = 0 ; i < ftdata.children.length ; i++) {
-                    tt.children.push(this._transformFileTreeData(ftdata.children[i]))
+                    this._transformFileTreeData(ftdata.children[i])
                 }
                 break;
         }
-        return tt
     }
 
     render(fileTreeData) {
-        let transformed = this._transformFileTreeData(fileTreeData)
+        this._transformFileTreeData(fileTreeData)
 
-        console.log(transformed)
 
-        this.treeui.load(transformed)
+        this.treeui.load(fileTreeData)
         this.treeui.render();
     }
 }
-
-
-
-
-
-
-
