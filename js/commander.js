@@ -1,10 +1,11 @@
 const PathTree = require('./pathtree')
 const Emitter = require('events').EventEmitter
 
-module.exports.new = () => {
-    let cmdEmitter = new Emitter()
-
-    function recieve(cmdText) {
+module.exports = class extends Emitter {
+    constructor(height, width) {
+        super()
+    }
+    write(cmdText) {
         //
         let command = {}
         try {
@@ -19,7 +20,7 @@ module.exports.new = () => {
         //
         switch(command['type']) {
             case 'get-dir':
-                cmd_getdir(command['dir'])
+                this._cmd_getdir(command['dir'])
                 break;
             default:
                 console.error("unkown command type", command)
@@ -27,13 +28,10 @@ module.exports.new = () => {
     }
 
 
-    function cmd_getdir(dir) {
+    _cmd_getdir(dir) {
         PathTree.pathTree(dir)
             .then( ( p ) => {
-                cmdEmitter.emit('response',JSON.stringify(p))
+                this.emit('response',JSON.stringify(p))
             })
     }
-
-    cmdEmitter.write = recieve
-    return cmdEmitter
-}
+};

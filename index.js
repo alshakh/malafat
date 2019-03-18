@@ -4,8 +4,7 @@ var expressws = require('express-ws')
 var app = express()
 var expressWs = expressws(app);
 
-const commander = require('./js/commander')
-console.log(commander)
+const Commander = require('./js/commander')
 
 
 
@@ -17,7 +16,7 @@ app.use(express.static(__dirname + "/client"));
 
 
 expressWs.app.ws('/malafat/:id', function (ws, req) {
-    let cmd = commander.new()
+    let cmd = new Commander()
     ws.on('message', (message) => {
         cmd.write(message)
     })
