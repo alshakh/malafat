@@ -1,30 +1,40 @@
-
-
-
-
-
+const FileTreeUI = require('./filetreeui')
 
 
 
 document.querySelectorAll('[data-malafat]').forEach((el) => {
-    let dir = el.dataset['dir']
+    let dirpath = el.dataset.dir
+    let isWatch =  ((typeof el.dataset['watch']) !== 'undefined' ? true : false)
+    let isCreate =  ((typeof el.dataset['create']) !== 'undefined' ? true : false)
+    //
+    let ftui = new FileTreeUI(el)
+
 
 
 
     const socketUrl = `${(location.protocol === 'https:') ? 'wss://' : 'ws://'}${location.hostname}${location.port ? `:${location.port}` : ''}/malafat/111`;
     const socket = new WebSocket(socketUrl);
 
-    socket.onopen = function () {
+    socket.onopen = () => {
         console.log('websocket is connected ...')
         socket.send(JSON.stringify({
-            "type" : "get-dir",
-            "dir" : dir
+            "type" : "init",
+            "path" : dirpath,
+            "watch" : isWatch,
+            "create" : isCreate
+        }))
+
+        socket.send(JSON.stringify({
+            "type" : "get-contents"
         }))
     }
 
     socket.onmessage = function (ev) {
-        el.innerHTML = ev['data']
-        console.log(ev)
+        let response = JSON.parse(ev['data'])
+        switch ( response.type ) {
+            case "contents" :
+                ftui.render(response.contents)
+                break;
+        }
     }
-
 })

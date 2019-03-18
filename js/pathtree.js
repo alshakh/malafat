@@ -23,6 +23,7 @@ let processFile =  async function(path, relativeto, stat) {
 
     return {
         kind: "file",
+        name: Path.basename(path),
         path: Path.relative(relativeto, path),
         size: stat.size,
         type: type,
@@ -42,6 +43,7 @@ let processDirectory =  async function(path, relativeto) {
     let children = await Promise.all(tmp_files);
     return {
         kind: "dir",
+        name: Path.basename(path),
         path: Path.relative(relativeto, path),
         children: children
     };
