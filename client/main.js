@@ -14,7 +14,7 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
     let leftpane = document.createElement('div')
     let rightpane = document.createElement('div')
     //el.setAttribute('style',"display: table; width: 100%;")
-    el.setAttribute('style',"width: 100%;display:flex;flex-wrap:nowrap")
+    el.setAttribute('style',"height:100%;width: 100%;display:flex;flex-wrap:nowrap")
     el.appendChild(leftpane)
 
 
