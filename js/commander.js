@@ -69,7 +69,6 @@ module.exports = class extends Emitter {
         if ( watch ) {
             //watchlib.watchTree(path,this._changes.bind(this))
             watchlib.createMonitor(path, (monitor) => {
-                console.log(this._cb_filecreated)
                 monitor.on("created", (f,s) => { this._cb_filecreated(f,s)})
                 monitor.on("changed", (f,s) => { this._cb_filechanged(f,s)})
                 monitor.on("removed", (f,s) => {this._cb_fileremoved(f,s)})
