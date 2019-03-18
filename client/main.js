@@ -18,6 +18,7 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
     el.appendChild(leftpane)
 
 
+    leftpane.setAttribute('style',"overflow-y:scroll")
     rightpane.setAttribute('style',"width:100%; margin-left:20px")
     let filetextEl = document.createElement("TEXTAREA")
     filetextEl.setAttribute("style","width:100%; height:100%" )
