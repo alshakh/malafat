@@ -9,7 +9,7 @@ module.exports = class   {
         let options = {
             initialLevel: 3,
             onSelect: (nodeData, el) => {
-                console.log(nodeData);
+                onFileSelectFn(nodeData.path)
             },
             nodeRenderFn: (data, el) => {
                 console.log(data)

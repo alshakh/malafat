@@ -27,8 +27,11 @@ module.exports = class extends Emitter {
                 this.path = this._cmd_init(command['path'],command['watch'],command['create'])
                 break
             //
-            case 'get-contents':
-                this._cmd_get_contents()
+            case 'get-file-tree':
+                this._cmd_get_file_tree()
+                break;
+            case 'get-file-content':
+                this._cmd_get_file_content(command['path'])
                 break;
             default:
                 console.error("unkown command type", command)
@@ -36,25 +39,45 @@ module.exports = class extends Emitter {
     }
     _cb_filecreated (f,stat) {
         console.log("file created :",f)
-        this._cmd_get_contents()
+        this._cmd_get_file_tree()
     }
     _cb_fileremoved (f,stat) {
         console.log("file deleted :",f)
-        this._cmd_get_contents()
+        this._cmd_get_file_tree()
     }
     _cb_filechanged (f,stat) {
         console.log("file changed :",f)
-        //this._cmd_get_contents()
+        //this._cmd_get_file_tree()
     }
 
-    _cmd_get_contents() {
+    _cmd_get_file_tree() {
         PathTree.pathTree(this.path)
             .then( ( p ) => {
                 this.emit('response',JSON.stringify({
-                    type : 'contents',
-                    contents : p
+                    type : 'file-tree',
+                    "file-tree" : p
                 }))
             })
+    }
+    _cmd_get_file_content(filepath) {
+        let filefullpath = this.path + "/" + filepath
+
+        // TODO : check validity of filepath
+
+        if ( ! Fs.statSync(filefullpath).isFile()) {
+            this.emit("response", JSON.stringify({
+                type : "file-content",
+                path : filepath,
+                content : "Just a directory!"
+            }))
+            return
+        }
+
+        this.emit("response", JSON.stringify({
+            type : "file-content",
+            path : filepath,
+            content : Fs.readFileSync(filefullpath, 'utf8')
+        }))
     }
     _cmd_init(path,watch,isCreate) {
         if (isCreate) {

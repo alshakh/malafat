@@ -10,13 +10,43 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
     let isWatch =  ((typeof el.dataset['watch']) !== 'undefined' ? true : false)
     let isCreate =  ((typeof el.dataset['create']) !== 'undefined' ? true : false)
     //
-    let ftui = new FileTreeUI(el)
+    
+    let leftpane = document.createElement('div')
+    let rightpane = document.createElement('div')
+    //el.setAttribute('style',"display: table; width: 100%;")
+    el.setAttribute('style',"width: 100%;display:flex;flex-wrap:nowrap")
+    el.appendChild(leftpane)
+
+
+    rightpane.setAttribute('style',"width:100%; margin-left:20px")
+    let filetextEl = document.createElement("TEXTAREA")
+    filetextEl.setAttribute("style","width:100%; height:100%" )
+    rightpane.appendChild(filetextEl)
+    el.appendChild(rightpane)
+
+
+
+
+
+
+
+
+
+    //
 
 
 
 
     const socketUrl = `${(location.protocol === 'https:') ? 'wss://' : 'ws://'}${location.hostname}${location.port ? `:${location.port}` : ''}/malafat/111`;
     const socket = new WebSocket(socketUrl);
+
+    let ftui = new FileTreeUI(leftpane,(fileselected)=> {
+        console.log("read file",fileselected)
+        socket.send(JSON.stringify({
+            "type" : "get-file-content",
+            "path" : fileselected,
+        }))
+    })
 
     socket.onopen = () => {
         console.log('websocket is connected ...')
@@ -28,15 +58,18 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
         }))
 
         socket.send(JSON.stringify({
-            "type" : "get-contents"
+            "type" : "get-file-tree"
         }))
     }
 
     socket.onmessage = function (ev) {
         let response = JSON.parse(ev['data'])
         switch ( response.type ) {
-            case "contents" :
-                ftui.render(response.contents)
+            case "file-tree" :
+                ftui.render(response['file-tree'])
+                break;
+            case "file-content" :
+                filetextEl.value = response['content']
                 break;
         }
     }
