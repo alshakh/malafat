@@ -83,16 +83,22 @@ module.exports = class   {
                 let filename = data.title
                 let span = document.createElement('span')
 
+
                 let ext = undefined
                 if ( data.name.lastIndexOf('.') !== -1 ) {
                     ext = data.name.substr(data.name.lastIndexOf('.') + 1);
                 }
-
                 let icon = document.createElement('i')
                 icon.setAttribute('class', getIconClass(ext, data.kind === 'dir'))
                 icon.setAttribute('style', "color : "+getIconColor(ext))
                 span.appendChild(icon)
+
+                if ( data.name.charAt(0) === '.' ) {
+                    span.setAttribute("style","opacity: 0.7;")
+                }
+
                 span.appendChild(document.createTextNode(' ' + filename))
+
                 return span
             },
         };
