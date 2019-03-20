@@ -13,31 +13,41 @@ const colors = {
 
 function getIconClass(extension, isdir) {
     if ( isdir ) {
-        return "fas fa-folder-open"
-    }
-
-    switch ( extension) {
-        case "pdf" :
-            return "fas fa-file-pdf"
-        case "txt":
-            return "fas fa-file-alt"
-        case "js":
-        case "py":
-        case "sh":
-        case "bash":
-        case "html":
-        case "c":
-        case "cxx":
-            return "fas fa-file-code"
-        case "zip":
-        case "z":
-        case "tar":
-        case "gz":
-        case "rar":
-        case "xz":
-            return "fas fa-file-archive"
-        default:
-            return "fas fa-file"
+        switch( extension ){
+            case "git":
+                return "fas fa-code-branch"
+            default:
+                return "fas fa-folder-open"
+        }
+    } else {
+        switch ( extension) {
+            case "pdf" :
+                return "fas fa-file-pdf"
+            case "md":
+                return "fas fa-book"
+            case "txt":
+            case "gitignore":
+                return "fas fa-file-alt"
+            case "js":
+            case "json":
+            case "css":
+            case "py":
+            case "sh":
+            case "bash":
+            case "html":
+            case "c":
+            case "cxx":
+                return "fas fa-file-code"
+            case "zip":
+            case "z":
+            case "tar":
+            case "gz":
+            case "rar":
+            case "xz":
+                return "fas fa-file-archive"
+            default:
+                return "fas fa-file"
+        }
     }
 }
 function getIconColor(extension) {
