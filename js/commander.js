@@ -1,4 +1,4 @@
-const PathTree = require('./pathtree')
+const PathTree = require('./pathtree.light')
 const Emitter = require('events').EventEmitter
 const Fs = require('fs')
 const watchlib = require('watch')
