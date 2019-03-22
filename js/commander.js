@@ -1,6 +1,7 @@
 const PathTree = require('./pathtree.light')
 const Emitter = require('events').EventEmitter
 const Fs = require('fs')
+const Path = require("path")
 const watchlib = require('watch')
 
 module.exports = class extends Emitter {
@@ -63,6 +64,10 @@ module.exports = class extends Emitter {
     _cb_filechanged (f,stat) {
         console.log("file changed :",f)
         //this._cmd_get_file_tree()
+        this.emit("response", JSON.stringify({
+            type : "file-changed",
+            path : Path.relative(this.path,f),
+        }))
     }
 
     _cmd_get_file_tree() {

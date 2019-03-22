@@ -1,9 +1,4 @@
-
-
-
 const FileTreeUI = require('./filetreeui')
-
-
 
 document.querySelectorAll('[data-malafat]').forEach((el) => {
     let dirpath = el.dataset.dir
@@ -21,6 +16,7 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
     leftpane.setAttribute('style',"overflow-y:scroll")
     rightpane.setAttribute('style',"width:100%; margin-left:20px")
     let filetextEl = document.createElement("TEXTAREA")
+    filetextEl.setAttribute("readonly","true")
     filetextEl.setAttribute("style","width:100%; height:100%" )
     rightpane.appendChild(filetextEl)
     el.appendChild(rightpane)
@@ -41,8 +37,11 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
     const socketUrl = `${(location.protocol === 'https:') ? 'wss://' : 'ws://'}${location.hostname}${location.port ? `:${location.port}` : ''}/malafat/111`;
     const socket = new WebSocket(socketUrl);
 
+    let openfile = undefined;
+
     let ftui = new FileTreeUI(leftpane,(fileselected)=> {
         console.log("read file",fileselected)
+        openfile = fileselected
         socket.send(JSON.stringify({
             "type" : "get-file-content",
             "path" : fileselected,
@@ -72,6 +71,14 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
             case "file-content" :
                 filetextEl.value = response['content']
                 break;
+            case "file-changed" :
+                console.log(response)
+                if ( openfile === response['path'] ) {
+                    socket.send(JSON.stringify({
+                        "type" : "get-file-content",
+                        "path" : openfile,
+                    }))
+                }
         }
     }
 })
