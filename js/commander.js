@@ -4,6 +4,10 @@ const Fs = require('fs')
 const Path = require("path")
 const watchlib = require('watch')
 
+
+
+
+let Watchers = {}
 module.exports = class extends Emitter {
     constructor() {
         super()
@@ -123,7 +127,14 @@ module.exports = class extends Emitter {
 
         if ( watch ) {
             //watchlib.watchTree(path,this._changes.bind(this))
+            let oldWatcher = Watchers[path]
+            if ( oldWatcher ) {
+                console.log('old watcher found, and deleted')
+                oldWatcher.stop()
+            }
+
             watchlib.createMonitor(path, (monitor) => {
+                Watchers[path] = monitor
                 monitor.on("created", (f,s) => { this._cb_filecreated(f,s)})
                 monitor.on("changed", (f,s) => { this._cb_filechanged(f,s)})
                 monitor.on("removed", (f,s) => {this._cb_fileremoved(f,s)})
