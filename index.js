@@ -15,7 +15,7 @@ app.use(express.static(__dirname + "/client"));
 
 
 
-expressWs.app.ws('/malafat/:id', function (ws, req) {
+expressWs.app.ws('/malafat', function (ws, req) {
     let cmd = new Commander()
     ws.on('message', (message) => {
         cmd.write(message)

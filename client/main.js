@@ -10,7 +10,7 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
     let isCreate =  ((typeof el.dataset['create']) !== 'undefined' ? true : false)
     //
 
-    const socketUrl = `${(location.protocol === 'https:') ? 'wss://' : 'ws://'}${location.hostname}${location.port ? `:${location.port}` : ''}/malafat/111`;
+    const socketUrl = `${(location.protocol === 'https:') ? 'wss://' : 'ws://'}${location.hostname}${location.port ? `:${location.port}` : ''}/malafat`;
     const socket = new WebSocket(socketUrl);
 
 
