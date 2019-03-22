@@ -2,7 +2,7 @@
   "name": "malafat",
   "version": "0.0.1",
   "description": "",
-  "main": "js/commander.js",
+  "main": "./client/fileviewer.js",
   "dependencies": {
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
