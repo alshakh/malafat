@@ -39,15 +39,16 @@ module.exports = class extends Emitter {
         }
     }
     _cb_filecreated (f,stat) {
+        // the time out is to protect against many requests when alot of file change in an instant
         if ( this.activeConnection ) {
             return
         }
         this.activeConnection = true
         //
-        console.log("file created :",f)
-        this._cmd_get_file_tree()
-        //
-        setTimeout(()=> this.activeConnection = false , 1000 )
+        setTimeout(()=> {
+            this._cmd_get_file_tree()
+            this.activeConnection = false
+        }, 1000 )
     }
     _cb_fileremoved (f,stat) {
         if ( this.activeConnection ) {
@@ -55,10 +56,10 @@ module.exports = class extends Emitter {
         }
         this.activeConnection = true
         //
-        console.log("file deleted :",f)
-        this._cmd_get_file_tree()
-        //
-        setTimeout(()=> this.activeConnection = false , 1000 )
+        setTimeout(()=> {
+            this._cmd_get_file_tree()
+            this.activeConnection = false
+        }, 1000 )
     }
     _cb_filechanged (f,stat) {
         console.log("file changed :",f)
@@ -79,8 +80,18 @@ module.exports = class extends Emitter {
         let filefullpath = this.path + "/" + filepath
 
         // TODO : check validity of filepath
+        let stat = Fs.statSync(filefullpath)
 
-        if ( ! Fs.statSync(filefullpath).isFile()) {
+        if ( stat.size > 1024*1024 ) {
+            this.emit("response", JSON.stringify({
+                type : "file-content",
+                path : filepath,
+                content : "Big File!"
+            }))
+            return
+        }
+
+        if ( ! stat.isFile()) {
             this.emit("response", JSON.stringify({
                 type : "file-content",
                 path : filepath,
@@ -94,6 +105,7 @@ module.exports = class extends Emitter {
             path : filepath,
             content : Fs.readFileSync(filefullpath, 'utf8')
         }))
+
     }
     _cmd_init(path,watch,isCreate) {
         if (isCreate) {
