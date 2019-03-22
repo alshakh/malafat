@@ -12,6 +12,10 @@ const colors = {
 }
 
 function getIconClass(extension, isdir) {
+    if ( extension ) {
+        extension = extension.toLowerCase()
+    }
+    //
     if ( isdir ) {
         switch( extension ){
             case "git":
@@ -82,7 +86,64 @@ function getIconColor(extension) {
 }
 
 
-module.exports = class   {
+
+class FileViewer {
+    constructor(options){
+        this.element = options.element
+        this.dir = options.dir
+
+        this.requestFileContentFn = options.requestFileContentFn // (f) => {}
+        this.requestFileTreeFn = options.requestFileTreeFn // (dir) => {}
+        //
+        this.openfile = undefined
+
+
+
+        //// prepare element
+        this.element.setAttribute('style',"display:flex;flex-wrap:nowrap")
+
+        let leftpane = document.createElement('div')
+        this.element.appendChild(leftpane)
+
+        let rightpane = document.createElement('div')
+        leftpane.setAttribute('style',"overflow-y:scroll")
+        rightpane.setAttribute('style',"width:100%; margin-left:20px")
+        let filetextEl = document.createElement("TEXTAREA")
+        this.contentTextAreaElement = filetextEl
+        filetextEl.setAttribute("readonly","true")
+        filetextEl.setAttribute("style","width:100%; height:100%" )
+        rightpane.appendChild(filetextEl)
+        this.element.appendChild(rightpane)
+
+
+        //
+        //
+
+        this.filetree = new FileTree(leftpane, (fileselected) => {
+            this.openfile = fileselected
+            this.requestFileContentFn(fileselected)
+        })
+        console.log(this)
+    }
+    newTree(){
+        this.requestFileTreeFn()
+    }
+    recieveFileContent(filepath,content) {
+        if ( this.openfile === filepath ) {
+            this.contentTextAreaElement.value = content
+        }
+    }
+    recieveFileTree(filetree) {
+        this.filetree.render(filetree) //TODO
+    }
+    notifyFileChanged(filepath) {
+        if ( this.openfile === filepath ) {
+            this.requestFileContentFn(filepath)
+        }
+    }
+}
+
+class FileTree  {
     constructor(element,onFileSelectFn) {
         this.element = element
 
@@ -139,8 +200,10 @@ module.exports = class   {
     render(fileTreeData) {
         this._transformFileTreeData(fileTreeData)
 
-
         this.treeui.load(fileTreeData)
         this.treeui.render();
     }
 }
+
+//
+module.exports = FileViewer
