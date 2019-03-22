@@ -7,12 +7,7 @@ var expressWs = expressws(app);
 const Commander = require('./js/commander')
 
 
-
-
 app.use(express.static(__dirname + "/client"));
-
-
-
 
 
 expressWs.app.ws('/malafat', function (ws, req) {

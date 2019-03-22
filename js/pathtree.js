@@ -1,32 +1,13 @@
 const Fs = require("fs");
 const Path = require("path");
 const Util = require("util");
-//const Mime = require('mime-types')
-const Mime = require('mime-type/with-db')
-//
-const detectFileFn = (() => {
-    const Mmm = require("mmmagic");
-    const magic = new Mmm.Magic(Mmm.MAGIC_MIME_TYPE );
-    return Util.promisify(magic.detectFile.bind(magic));
-})();
 
 
 let processFile =  async function(path, relativeto, stat) {
-    // get type
-    let type = await detectFileFn(path)
-    if ( type === undefined || type  === 'text/plain' ) {
-        let tmpType = Mime.lookup(Path.extname(path))
-        if ( tmpType !== undefined ) {
-            type = tmpType
-        }
-    }
-
     return {
         kind: "file",
         name: Path.basename(path),
         path: Path.relative(relativeto, path),
-        size: stat.size,
-        type: type,
     }
 }
 

@@ -110,7 +110,7 @@ class FileViewer {
         let filetextEl = document.createElement("TEXTAREA")
         this.contentTextAreaElement = filetextEl
         filetextEl.setAttribute("readonly","true")
-        filetextEl.setAttribute("style","width:100%; height:100%" )
+        filetextEl.setAttribute("style","width:100%; height:100%; font-size : " + options.fontsize +";" )
         rightpane.appendChild(filetextEl)
         this.element.appendChild(rightpane)
 
@@ -139,9 +139,13 @@ class FileViewer {
                 icon.setAttribute('style', "color : "+getIconColor(ext))
                 span.appendChild(icon)
 
+
+                var spanStyle = ''
                 if ( data.name.charAt(0) === '.' ) {
-                    span.setAttribute("style","opacity: 0.7;")
+                    spenStyle += "opacity: 0.7;"
                 }
+                spanStyle += "font-size:"+options.fontsize+";"
+                span.setAttribute("style",spanStyle)
 
                 span.appendChild(document.createTextNode(' ' + filename))
 

@@ -1,24 +1,15 @@
 const FileViewer = require('./fileviewer')
 
-
-
-
-
-document.querySelectorAll('[data-malafat]').forEach((el) => {
-    let dirpath = el.dataset.dir
-    let isWatch =  ((typeof el.dataset['watch']) !== 'undefined' ? true : false)
-    let isCreate =  ((typeof el.dataset['create']) !== 'undefined' ? true : false)
+function processFileViewElement ( element ) {
+    let dirpath = element.dataset.dir
+    let isWatch =  ((typeof element.dataset['watch']) !== 'undefined' ? true : false)
+    let isCreate =  ((typeof element.dataset['create']) !== 'undefined' ? true : false)
     //
-
     const socketUrl = `${(location.protocol === 'https:') ? 'wss://' : 'ws://'}${location.hostname}${location.port ? `:${location.port}` : ''}/malafat`;
     const socket = new WebSocket(socketUrl);
-
-
-
-
-
+    //
     let fv = new FileViewer ({
-        element : el,
+        element : element,
         dir : dirpath,
         requestFileContentFn : (f) => {
             socket.send(JSON.stringify({
@@ -30,10 +21,10 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
             socket.send(JSON.stringify({
                 "type" : "get-file-tree"
             }))
-        }
+        },
+        fontsize : "40px"
     })
-
-
+    //
     socket.onmessage = function (ev) {
         let response = JSON.parse(ev['data'])
         switch ( response.type ) {
@@ -48,7 +39,7 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
                 break
         }
     }
-
+    //
     socket.onopen = () => {
         console.log('websocket is connected ...')
         socket.send(JSON.stringify({
@@ -59,6 +50,8 @@ document.querySelectorAll('[data-malafat]').forEach((el) => {
         }))
         fv.newTree()
     }
-
-
+}
+//
+document.querySelectorAll('[data-malafat]').forEach((el) => {
+    processFileViewElement(el)
 })

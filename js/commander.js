@@ -1,4 +1,4 @@
-const PathTree = require('./pathtree.light')
+const PathTree = require('./pathtree')
 const Emitter = require('events').EventEmitter
 const Fs = require('fs')
 const Path = require("path")
@@ -67,7 +67,7 @@ module.exports = class extends Emitter {
     }
     _cb_filechanged (f,stat) {
         console.log("file changed :",f)
-        //this._cmd_get_file_tree()
+        //
         this.emit("response", JSON.stringify({
             type : "file-changed",
             path : Path.relative(this.path,f),
@@ -75,7 +75,6 @@ module.exports = class extends Emitter {
     }
 
     _cmd_get_file_tree() {
-        console.log("send")
         PathTree.pathTree(this.path)
             .then( ( p ) => {
                 this.emit('response',JSON.stringify({
@@ -126,7 +125,6 @@ module.exports = class extends Emitter {
         }
 
         if ( watch ) {
-            //watchlib.watchTree(path,this._changes.bind(this))
             let oldWatcher = Watchers[path]
             if ( oldWatcher ) {
                 console.log('old watcher found, and deleted')
@@ -140,7 +138,6 @@ module.exports = class extends Emitter {
                 monitor.on("removed", (f,s) => {this._cb_fileremoved(f,s)})
             })
         }
-        //monitor.stop(); // Stop watching
 
         return path
     }
