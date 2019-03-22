@@ -8,8 +8,7 @@ module.exports = class extends Emitter {
         super()
         this.path = undefined
         this.activeConnection = false
-    }
-    write(cmdText) {
+    } write(cmdText) {
         //
         let command = {}
         try {
@@ -82,7 +81,7 @@ module.exports = class extends Emitter {
         // TODO : check validity of filepath
         let stat = Fs.statSync(filefullpath)
 
-        if ( stat.size > 1024*1024 ) {
+        if ( stat.size > 5*1024*1024 ) {
             this.emit("response", JSON.stringify({
                 type : "file-content",
                 path : filepath,
