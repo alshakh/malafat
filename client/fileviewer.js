@@ -10,7 +10,6 @@ const colors = {
     purple : "#845ef7",
     pink : "#f06595",
 }
-
 function getIconClass(extension, isdir) {
     if ( extension ) {
         extension = extension.toLowerCase()
@@ -119,38 +118,11 @@ class FileViewer {
         //
         //
 
-        this.filetree = new FileTree(leftpane, (fileselected) => {
-            this.openfile = fileselected
-            this.requestFileContentFn(fileselected)
-        })
-        console.log(this)
-    }
-    newTree(){
-        this.requestFileTreeFn()
-    }
-    recieveFileContent(filepath,content) {
-        if ( this.openfile === filepath ) {
-            this.contentTextAreaElement.value = content
-        }
-    }
-    recieveFileTree(filetree) {
-        this.filetree.render(filetree) //TODO
-    }
-    notifyFileChanged(filepath) {
-        if ( this.openfile === filepath ) {
-            this.requestFileContentFn(filepath)
-        }
-    }
-}
-
-class FileTree  {
-    constructor(element,onFileSelectFn) {
-        this.element = element
-
-        let options = {
+        let filetreeOptions = {
             initialLevel: 3,
             onSelect: (nodeData, el) => {
-                onFileSelectFn(nodeData.path)
+                    this.openfile = nodeData['path']
+                    this.requestFileContentFn(nodeData['path'])
             },
             nodeRenderFn: (data, el) => {
                 console.log(data)
@@ -177,13 +149,18 @@ class FileTree  {
             },
         };
 
-        this.treeui = new UiJsTree({}, element, options);
+        this.treeui = new UiJsTree({}, leftpane, filetreeOptions);
+    }
+    newTree(){
+        this.requestFileTreeFn()
+    }
+    recieveFileContent(filepath,content) {
+        if ( this.openfile === filepath ) {
+            this.contentTextAreaElement.value = content
+        }
     }
 
-
-    _transformFileTreeData(ftdata) {
-        console.log(ftdata)
-
+    _addTitleToTreeData(ftdata) {
         switch (ftdata.kind) {
             case "file":
                 ftdata.title = ftdata.name
@@ -191,17 +168,21 @@ class FileTree  {
             case "dir":
                 ftdata.title = ftdata.name
                 for (let i = 0 ; i < ftdata.children.length ; i++) {
-                    this._transformFileTreeData(ftdata.children[i])
+                    this._addTitleToTreeData(ftdata.children[i])
                 }
                 break;
         }
     }
-
-    render(fileTreeData) {
-        this._transformFileTreeData(fileTreeData)
-
-        this.treeui.load(fileTreeData)
+    recieveFileTree(filetree) {
+        this._addTitleToTreeData(filetree)
+        //
+        this.treeui.load(filetree)
         this.treeui.render();
+    }
+    notifyFileChanged(filepath) {
+        if ( this.openfile === filepath ) {
+            this.requestFileContentFn(filepath)
+        }
     }
 }
 
