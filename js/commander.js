@@ -7,6 +7,7 @@ module.exports = class extends Emitter {
     constructor() {
         super()
         this.path = undefined
+        this.activeConnection = false
     }
     write(cmdText) {
         //
@@ -38,12 +39,26 @@ module.exports = class extends Emitter {
         }
     }
     _cb_filecreated (f,stat) {
+        if ( this.activeConnection ) {
+            return
+        }
+        this.activeConnection = true
+        //
         console.log("file created :",f)
         this._cmd_get_file_tree()
+        //
+        setTimeout(()=> this.activeConnection = false , 1000 )
     }
     _cb_fileremoved (f,stat) {
+        if ( this.activeConnection ) {
+            return
+        }
+        this.activeConnection = true
+        //
         console.log("file deleted :",f)
         this._cmd_get_file_tree()
+        //
+        setTimeout(()=> this.activeConnection = false , 1000 )
     }
     _cb_filechanged (f,stat) {
         console.log("file changed :",f)
@@ -51,6 +66,7 @@ module.exports = class extends Emitter {
     }
 
     _cmd_get_file_tree() {
+        console.log("send")
         PathTree.pathTree(this.path)
             .then( ( p ) => {
                 this.emit('response',JSON.stringify({
