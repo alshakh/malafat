@@ -45,6 +45,19 @@ function getIconClass(extension, isdir) {
             case "rar":
             case "xz":
                 return "fas fa-file-archive"
+            case "jpg":
+            case "jpeg":
+            case "exif":
+            case "tiff":
+            case "tif":
+            case "gif":
+            case "bmp":
+            case "png":
+            case "ppm":
+            case "pgm":
+            case "pbm":
+            case "pnm":
+                return "fas fa-file-image"
             default:
                 return "fas fa-file"
         }
