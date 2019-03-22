@@ -4,8 +4,6 @@
   "description": "",
   "main": "js/commander.js",
   "dependencies": {
-    "express": "^4.16.4",
-    "express-ws": "^4.0.0",
     "watch": "^1.0.2"
   },
   "devDependencies": {
