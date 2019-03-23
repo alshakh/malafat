@@ -4,10 +4,10 @@ var expressws = require('express-ws')
 var app = express()
 var expressWs = expressws(app);
 
-const Commander = require('./js/commander')
+const Commander = require('malafat')
 
 
-app.use(express.static(__dirname + "/example-client"));
+app.use(express.static(__dirname + "/public"));
 
 
 expressWs.app.ws('/malafat', function (ws, req) {
